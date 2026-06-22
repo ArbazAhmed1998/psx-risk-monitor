@@ -3,7 +3,7 @@ uvicorn[standard]==0.34.0
 pandas==2.2.3
 numpy==2.2.1
 psxdata==0.1.0a3
-ta==0.11.0
+
 scikit-learn==1.6.1
 vaderSentiment==3.3.2
 beautifulsoup4==4.12.3
