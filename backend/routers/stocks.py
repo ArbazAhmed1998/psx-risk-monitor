@@ -1,12 +1,12 @@
 from fastapi import APIRouter, HTTPException
-from models.schemas import (
+from backend.models.schemas import (
     StockListResponse,
     StockDetailResponse,
     StockHistoricalResponse,
     StockNewsResponse,
     RiskResponse,
 )
-from services import psx_data
+from backend.services import psx_data
 
 router = APIRouter(prefix="/stocks", tags=["stocks"])
 
@@ -61,7 +61,7 @@ def get_historical(symbol: str, days: int = 365):
 @router.get("/{symbol}/news", response_model=StockNewsResponse)
 def get_news(symbol: str):
     symbol = symbol.upper()
-    from services.news_scraper import scrape_news
+    from backend.services.news_scraper import scrape_news
     articles = scrape_news(symbol)
     return {"symbol": symbol, "articles": articles, "count": len(articles)}
 
@@ -69,7 +69,7 @@ def get_news(symbol: str):
 @router.get("/{symbol}/risk", response_model=RiskResponse)
 def get_risk(symbol: str):
     symbol = symbol.upper()
-    from services.risk_model import calculate_risk
+    from backend.services.risk_model import calculate_risk
     result = calculate_risk(symbol)
     if result is None:
         raise HTTPException(status_code=404, detail=f"Cannot compute risk for {symbol}")

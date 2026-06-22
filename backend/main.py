@@ -3,14 +3,14 @@ import logging
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import stocks
+from backend.routers import stocks
 
 logger = logging.getLogger(__name__)
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    from services.risk_model import train_ml_model
+    from backend.services.risk_model import train_ml_model
     model_path = os.path.join("backend", "models", "risk_classifier.pkl")
     if not os.path.exists(model_path):
         logger.info("ML model not found, training on startup...")

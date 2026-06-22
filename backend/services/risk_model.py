@@ -5,10 +5,10 @@ import logging
 import joblib
 import os
 
-from services import psx_data
-from services.indicators import latest_indicators, add_all_indicators
-from services.news_scraper import scrape_news
-from services.sentiment import analyze_sentiment
+from backend.services import psx_data
+from backend.services.indicators import latest_indicators, add_all_indicators
+from backend.services.news_scraper import scrape_news
+from backend.services.sentiment import analyze_sentiment
 
 logger = logging.getLogger(__name__)
 
