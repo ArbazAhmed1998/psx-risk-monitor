@@ -619,6 +619,41 @@ class _QuoteCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context);
+    final items = <Widget>[];
+
+    void addRow(String label1, String val1, String label2, String val2) {
+      items.add(Padding(
+        padding: const EdgeInsets.only(bottom: 12),
+        child: Row(
+          children: [
+            Expanded(child: _InfoTile(label: label1, value: val1)),
+            const SizedBox(width: 12),
+            Expanded(child: _InfoTile(label: label2, value: val2)),
+          ],
+        ),
+      ));
+    }
+
+    if (quote.open != 0 && quote.high != 0) {
+      addRow('Open', quote.open.toStringAsFixed(2), 'High', quote.high.toStringAsFixed(2));
+    }
+    if (quote.volume > 0) {
+      addRow('Volume', NumberFormat('#,##0').format(quote.volume), 'Low', quote.low.toStringAsFixed(2));
+    }
+
+    if (quote.marketCap != null && quote.marketCap != 0) {
+      final mc = '${NumberFormat('#,##0.0').format(quote.marketCap! / 1e9)}B';
+      if (quote.peRatio != null && quote.peRatio != 0) {
+        addRow('Market Cap', mc, 'P/E Ratio', quote.peRatio!.toStringAsFixed(2));
+      } else {
+        items.add(_InfoTile(label: 'Market Cap', value: mc));
+      }
+    } else if (quote.peRatio != null && quote.peRatio != 0) {
+      items.add(_InfoTile(label: 'P/E Ratio', value: quote.peRatio!.toStringAsFixed(2)));
+    }
+
+    if (items.isEmpty) return const SizedBox();
+
     return Card(
       elevation: 0,
       shape: RoundedRectangleBorder(
@@ -635,38 +670,7 @@ class _QuoteCard extends StatelessWidget {
               color: t.colorScheme.onSurface,
             )),
             const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(child: _InfoTile(label: 'Open', value: quote.open.toStringAsFixed(2))),
-                Expanded(child: _InfoTile(label: 'High', value: quote.high.toStringAsFixed(2))),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                Expanded(child: _InfoTile(label: 'Low', value: quote.low.toStringAsFixed(2))),
-                Expanded(child: _InfoTile(
-                  label: 'Volume',
-                  value: NumberFormat('#,##0').format(quote.volume),
-                )),
-              ],
-            ),
-            if (quote.marketCap != null && quote.marketCap != 0) ...[
-              const SizedBox(height: 12),
-              Row(
-                children: [
-                  Expanded(child: _InfoTile(
-                    label: 'Market Cap',
-                    value: '${NumberFormat('#,##0.0').format(quote.marketCap! / 1e9)}B',
-                  )),
-                  if (quote.peRatio != null && quote.peRatio != 0)
-                    Expanded(child: _InfoTile(
-                      label: 'P/E Ratio',
-                      value: quote.peRatio!.toStringAsFixed(2),
-                    )),
-                ],
-              ),
-            ],
+            ...items,
           ],
         ),
       ),
