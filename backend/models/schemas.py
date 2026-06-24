@@ -6,6 +6,9 @@ class StockInfo(BaseModel):
     symbol: str
     name: str
     sector: str
+    price: float = 0
+    change: float = 0
+    change_percent: float = 0
 
 
 class StockListResponse(BaseModel):

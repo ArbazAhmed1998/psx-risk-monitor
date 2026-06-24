@@ -32,10 +32,14 @@ COMPANY_SECTORS = {
 def list_stocks():
     stocks_list = []
     for t in TOP_10_KSE100:
+        quote = psx_data.get_quote(t)
         stocks_list.append({
             "symbol": t,
             "name": COMPANY_NAMES.get(t, t),
             "sector": COMPANY_SECTORS.get(t, "N/A"),
+            "price": quote.get("price", 0) if quote else 0,
+            "change": quote.get("change", 0) if quote else 0,
+            "change_percent": quote.get("change_percent", 0) if quote else 0,
         })
     return {"stocks": stocks_list, "count": len(stocks_list)}
 
